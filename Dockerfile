@@ -4,8 +4,8 @@ FROM debian:10
 
 RUN apt update \
     && apt install -y \
-    build-essential wget curl tar unzip ca-certificates libxml2-dev libssl-dev libtool-bin \
-    pajeng r-base-core git procps python gawk autoconf perl m4 libcurl4-openssl-dev libgit2-dev\
+    build-essential wget curl tar unzip ca-certificates \
+    pajeng r-base-core git procps python gawk libtool-bin\
     && apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN git clone https://github.com/llnl/spack.git --depth=1
