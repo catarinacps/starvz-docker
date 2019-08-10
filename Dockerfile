@@ -25,7 +25,8 @@ RUN rm -rf /starvz
 
 RUN apt -y remove \
     procps libboost-all-dev libtool-bin libxml2-dev libssl-dev \
-    libcurl4-openssl-dev libgit2-dev
+    libcurl4-openssl-dev libgit2-dev \
+    && apt -y autoremove
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
