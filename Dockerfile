@@ -4,8 +4,9 @@ FROM debian:10
 
 RUN apt update \
     && apt install -y \
-    build-essential wget curl tar unzip ca-certificates \
-    pajeng r-base-core git procps python gawk libtool-bin\
+    build-essential wget curl tar unzip ca-certificates libtool-bin \
+    pajeng libboost-all-dev r-base-core git procps python gawk \
+    libxml2-dev libssl-dev libcurl4-openssl-dev libgit2-dev \
     && apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN git clone https://github.com/llnl/spack.git --depth=1
@@ -22,7 +23,9 @@ RUN git clone https://github.com/schnorr/starvz
 RUN cp /starvz/src/* /starvz/R/* /usr/bin/
 RUN rm -rf /starvz
 
-# RUN apt -y remove wget curl unzip git
+RUN apt -y remove \
+    procps libboost-all-dev libtool-bin libxml2-dev libssl-dev \
+    libcurl4-openssl-dev libgit2-dev
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
