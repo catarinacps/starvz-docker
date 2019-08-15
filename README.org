@@ -8,13 +8,52 @@ This repository is dedicated to the development of an automated script that
 launches the =starvz= analysis script of trace files using a package-ready
 Docker image.
 
-* Table of contents                                                   :TOC_3:
-- [[#installation][Installation]]
-- [[#usage][Usage]]
-- [[#contact][Contact]]
+** Table of contents                                                 :TOC_3:
+  - [[#installation][Installation]]
+  - [[#usage][Usage]]
+  - [[#contact][Contact]]
 
-* Installation
+** Installation
 
-* Usage
+You can obtain this image by doing the following command:
 
-* Contact
+#+begin_src bash :tangle yes
+docker pull hcpsilva/starvz
+#+end_src
+
+If you haven't downloaded the image when you eventually run the script, the
+script itself will pull the image.
+
+And you can obtain this repository and it's scripts for running data
+analysis by doing:
+
+#+begin_src bash :tangle yes
+git clone https://github.com/hcpsilva/starvz-docker.git
+#+end_src
+
+** Usage
+
+This repository consists of two main things:
+
+- A Dockerfile containing a StarPU data-analysis-ready environment;
+- A executable-like script that runs the =starvz= analysis in a given folder.
+
+To run any of those please follow the instructions given in [[Installation]].
+
+Having that said, you can run some data analysis by using the script called
+=starvz=, which is in the root of this repository.
+
+#+begin_src bash :tangle yes
+./starvz <path_to_the_traces>
+#+end_src
+
+By running this command you'll launch the first phase of =starvz='s analysis
+(work will be done to further automate the effort into a more sleek solution).
+
+** Contact
+
+You can contact me at:
+
+#+BEGIN_EXAMPLE
+hcpsilva@inf.ufrgs.br
+#+END_EXAMPLE

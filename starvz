@@ -1,6 +1,29 @@
 #!/bin/bash
 
+function usage()
+{
+    echo "$0 <directory>"
+    echo "    where <directory> is the directory containing the fxt traces"
+}
+
+if [ ! -d "$1" ]; then
+    echo "Given parameter is not a directory."
+    echo "Please refer to the following usage example:"
+    echo
+    usage
+
+    exit
+fi
+
+if [ ! -z $(docker images -q hcpsilva/starvz:latest) ]; then
+    echo "--> Image not found, pulling from repository..."
+    docker pull hcpsilva/starvz
+fi
+
 docker run -dit \
        --name=trace_analysis \
-       --mount type=bind,source=`pwd`/data,target=/scratch \
-       starvz
+       --mount type=bind,source=$1,target=/scratch \
+       --workdir=/scratch \
+       starvz phase1_workflow.sh /scratch application
+# I actually don't know why there is an application parameter but since it asks
+# for something I might as well put something

@@ -17,7 +17,7 @@ RUN git clone https://github.com/llnl/spack.git --depth=1 \
     && /spack/bin/spack view -d yes hard -i / starpu \
     && rm -rf /spack /spack-solverstack
 
-RUN echo "install.packages(c('tidyverse', 'devtools'), repos = 'http://cran.us.r-project.org')" | R --vanilla \
+RUN echo "install.packages(c('tidyverse', 'devtools'), repos = 'https://cran.us.r-project.org')" | R --vanilla \
     && echo "library(devtools); devtools::install_github('schnorr/starvz', subdir='R_package')" | R --vanilla
 
 RUN git clone https://github.com/schnorr/starvz \
@@ -25,7 +25,7 @@ RUN git clone https://github.com/schnorr/starvz \
     && rm -rf /starvz
 
 RUN apt -y remove \
-    procps libboost-all-dev libtool-bin \
+    procps libtool-bin \
     && apt -y autoremove \
     && apt clean
 
