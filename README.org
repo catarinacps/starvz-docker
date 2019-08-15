@@ -2,10 +2,19 @@
 #+author: Henrique Silva
 #+email: hcpsilva@inf.ufrgs.br
 #+infojs_opt:
-#+property: session *R*
 #+property: cache yes
-#+property: results graphics
-#+property: exports both
-#+property: tangle yes
 
-Placeholder!
+This repository is dedicated to the development of an automated script that
+launches the =starvz= analysis script of trace files using a package-ready
+Docker image.
+
+* Table of contents                                                   :TOC_3:
+- [[#installation][Installation]]
+- [[#usage][Usage]]
+- [[#contact][Contact]]
+
+* Installation
+
+* Usage
+
+* Contact
