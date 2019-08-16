@@ -21,7 +21,9 @@ RUN echo "install.packages(c('tidyverse', 'devtools'), repos = 'https://cran.us.
     && echo "library(devtools); devtools::install_github('schnorr/starvz', subdir='R_package')" | R --vanilla
 
 RUN git clone https://github.com/schnorr/starvz \
-    && cp /starvz/src/* /starvz/R/* /usr/bin/ \
+    && cp /starvz/src/* /usr/bin/ \
+    && mkdir /usr/R \
+    && cp /starvz/R/* /usr/R/ \
     && rm -rf /starvz
 
 RUN apt -y remove \

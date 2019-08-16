@@ -27,9 +27,11 @@ docker run -dit \
 # I actually don't know why there is an application parameter but since it asks
 # for something I might as well put something
 
-docker exec trace_analysis \
+docker exec \
+       --workdir / \
+       trace_analysis \
        phase1-workflow.sh /scratch application
 
-docker container stop trace_analysis 2&>1
+docker container stop trace_analysis > /dev/null 2>&1
 
-docker container rm trace_analysis 2&>1
+docker container rm trace_analysis > /dev/null 2>&1
