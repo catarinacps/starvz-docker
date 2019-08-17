@@ -1,6 +1,6 @@
 ## -*- docker-image-name: starvz -*-
 
-FROM debian:stretch
+FROM debian:buster-slim
 
 RUN apt update \
     && apt install -y \
