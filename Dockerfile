@@ -1,12 +1,12 @@
 ## -*- docker-image-name: starvz -*-
 
-FROM debian:10
+FROM debian:stretch
 
 RUN apt update \
     && apt install -y \
-    build-essential wget curl tar unzip ca-certificates libtool-bin \
-    pajeng libboost-all-dev r-base-core git procps python gawk \
-    libxml2-dev libssl-dev libcurl4-openssl-dev libgit2-dev \
+    build-essential curl git libtool libtool-bin \
+    pajeng libboost-dev r-base-core procps python gawk \
+    libxml2-dev libssl-dev libcurl4-gnutls-dev libgit2-dev \
     && apt clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -27,7 +27,7 @@ RUN git clone https://github.com/schnorr/starvz \
     && rm -rf /starvz
 
 RUN apt -y remove \
-    procps libtool-bin \
+    procps libtool libtool-bin git python gawk curl build-essential \
     && apt -y autoremove \
     && apt clean
 
