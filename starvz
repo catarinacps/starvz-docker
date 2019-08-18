@@ -53,7 +53,7 @@ fi
 docker run -dit \
        --name=trace_analysis \
        --mount type=bind,source=$PATH,target=/scratch \
-       $IMAGE bash
+       $IMAGE bash > /dev/null 2>&1
 # I actually don't know why there is an application parameter but since it asks
 # for something I might as well put something
 
