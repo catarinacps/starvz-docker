@@ -1,12 +1,31 @@
 #!/bin/bash
 
+DEFAULT_IMAGE="hcpsilva/starvz:latest"
+
 function usage()
 {
-    echo "$0 <directory>"
-    echo "    where <directory> is the directory containing the fxt traces"
+    echo "$0 [OPTIONS] <DIRECTORY>"
+    echo "    where <DIRECTORY> is the directory containing the fxt traces"
+    echo " ---"
+    echo "[OPTIONS] can be any of the following, in no particular order:"
+    echo "  --image=IMAGE_NAME:TAG"
+    echo "    use an image instead of the default $DEFAULT_IMAGE"
 }
 
-if [ ! -d "$1" ]; then
+for i in "$@"; do
+    case $i in
+        --image=*)
+            IMAGE="${i#*=}"
+            shift
+            ;;
+        *)
+            PATH="$i"
+            ;;
+    esac
+done
+
+
+if [ ! -d "$PATH" ]; then
     echo "Given parameter is not a directory."
     echo "Please refer to the following usage example:"
     echo
@@ -15,15 +34,27 @@ if [ ! -d "$1" ]; then
     exit
 fi
 
-if [ -z $(docker images -q hcpsilva/starvz:latest) ]; then
+if [ -z ${IMAGE+x} ]; then
+    IMAGE="$DEFAULT_IMAGE"
+fi
+
+if [ -z ${PATH+x} ]; then
+    PATH=`pwd`
+fi
+
+if [ -z $(docker images -q "$IMAGE") ] && [ "$IMAGE" == "$DEFAULT_IMAGE" ]; then
     echo "--> Image not found, pulling from repository..."
-    docker pull hcpsilva/starvz
+    docker pull "$IMAGE"
+elif [ -z $(docker images -q "$IMAGE") ]; then
+    echo "--> Image not found, be sure that your image exists..."
+
+    exit
 fi
 
 docker run -dit \
        --name=trace_analysis \
-       --mount type=bind,source=$1,target=/scratch \
-       hcpsilva/starvz bash
+       --mount type=bind,source=$PATH,target=/scratch \
+       $IMAGE bash
 # I actually don't know why there is an application parameter but since it asks
 # for something I might as well put something
 

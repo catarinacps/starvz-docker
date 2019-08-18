@@ -24,6 +24,10 @@ docker pull hcpsilva/starvz
 If you haven't downloaded the image when you eventually run the script, the
 script itself will pull the image.
 
+Alternatively, you can either:
+- build my image locally
+- pass other image as a parameter to the script, check more details in [[Usage]]
+
 And you can obtain this repository and it's scripts for running data
 analysis by doing:
 
@@ -44,7 +48,7 @@ Having that said, you can run some data analysis by using the script called
 =starvz=, which is in the root of this repository.
 
 #+begin_src bash :tangle yes
-./starvz <path_to_the_traces>
+./starvz [--image=your_image:tag] <full_path_to_the_traces>
 #+end_src
 
 By running this command you'll launch the first phase of =starvz='s analysis
