@@ -5,7 +5,7 @@ DEFAULT_IMAGE="hcpsilva/starvz:latest"
 function usage()
 {
     echo "$0 [OPTIONS] <DIRECTORY>"
-    echo "    where <DIRECTORY> is the directory containing the fxt traces"
+    echo "    where <DIRECTORY> is the *full path* to the directory containing the fxt traces"
     echo " ---"
     echo "[OPTIONS] can be any of the following, in no particular order:"
     echo "  --image=IMAGE_NAME:TAG"
@@ -24,6 +24,13 @@ for i in "$@"; do
     esac
 done
 
+if [ -z ${IMAGE+x} ]; then
+    IMAGE="$DEFAULT_IMAGE"
+fi
+
+if [ -z ${PATH+x} ]; then
+    PATH=`pwd`
+fi
 
 if [ ! -d "$PATH" ]; then
     echo "Given parameter is not a directory."
@@ -32,14 +39,6 @@ if [ ! -d "$PATH" ]; then
     usage
 
     exit
-fi
-
-if [ -z ${IMAGE+x} ]; then
-    IMAGE="$DEFAULT_IMAGE"
-fi
-
-if [ -z ${PATH+x} ]; then
-    PATH=`pwd`
 fi
 
 if [ -z $(docker images -q "$IMAGE") ] && [ "$IMAGE" == "$DEFAULT_IMAGE" ]; then

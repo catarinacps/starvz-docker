@@ -51,8 +51,15 @@ Having that said, you can run some data analysis by using the script called
 ./starvz [--image=your_image:tag] <full_path_to_the_traces>
 #+end_src
 
-By running this command you'll launch the first phase of =starvz='s analysis
-(work will be done to further automate the effort into a more sleek solution).
+By running this command you'll launch the first phase of =starvz='s analysis.
+
+The script presumes some default values if you haven't set the parameter:
+
+- Image to be used :: If you don't explicitly set other, the script will use the
+     image that I provide in my DockerHub repository.
+- Path to the directory :: Again, if you don't set it (you should, it's a
+     positional parameter), the script will fetch the current directory's path
+     through =pwd=.
 
 ** Contact
 
