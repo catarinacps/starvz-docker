@@ -2,6 +2,9 @@
 
 DEFAULT_IMAGE="hcpsilva/starvz:latest"
 
+IMAGE=$DEFAULT_IMAGE
+PATH=`pwd`
+
 function usage()
 {
     echo "$0 [OPTIONS] <DIRECTORY>"
@@ -23,14 +26,6 @@ for i in "$@"; do
             ;;
     esac
 done
-
-if [ -z ${IMAGE+x} ]; then
-    IMAGE="$DEFAULT_IMAGE"
-fi
-
-if [ -z ${PATH+x} ]; then
-    PATH=`pwd`
-fi
 
 if [ ! -d "$PATH" ]; then
     echo "Given parameter is not a directory."
@@ -54,13 +49,13 @@ docker run -dit \
        --name=trace_analysis \
        --mount type=bind,source=$PATH,target=/scratch \
        $IMAGE bash > /dev/null 2>&1
-# I actually don't know why there is an application parameter but since it asks
-# for something I might as well put something
 
 docker exec \
        --workdir / \
        trace_analysis \
        phase1-workflow.sh /scratch application
+# I actually don't know why there is an application parameter but since it asks
+# for something I might as well put something
 
 docker container stop trace_analysis > /dev/null 2>&1
 
