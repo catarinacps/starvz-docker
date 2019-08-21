@@ -2,8 +2,10 @@
 
 DEFAULT_IMAGE="hcpsilva/starvz:latest"
 
-IMAGE=$DEFAULT_IMAGE
-PATH=`pwd`
+IMAGE_NAME=$DEFAULT_IMAGE
+IMAGE_PATH=""
+PATH=$(pwd)
+UNPRIVILEGED=false
 
 function usage()
 {
@@ -11,14 +13,41 @@ function usage()
     echo "    where <DIRECTORY> is the *full path* to the directory containing the fxt traces"
     echo " ---"
     echo "[OPTIONS] can be any of the following, in no particular order:"
-    echo "  --image=IMAGE_NAME:TAG"
-    echo "    use an image instead of the default $DEFAULT_IMAGE"
+    echo "  -h | --help"
+    echo "    shows this message and exits"
+    echo "  -i | --image=image_name:tag"
+    echo "    use a remote image instead of the default $default_image"
+    echo "  -t | --tarball=path/to/the/image.tar.gz"
+    echo "    use an image tarball instead of the default $default_image"
 }
 
 for i in "$@"; do
     case $i in
+        -h|--help)
+            echo "Usage:"
+            echo
+            usage
+
+            exit
+            ;;
         --image=*)
-            IMAGE="${i#*=}"
+            IMAGE_NAME="${i#*=}"
+            shift
+            ;;
+        -i)
+            shift
+            IMAGE_NAME="$i"
+            shift
+            ;;
+        --tarball=*)
+            UNPRIVILEGED=true
+            IMAGE_PATH="${i#*=}"
+            shift
+            ;;
+        -t)
+            UNPRIVILEGED=true
+            shift
+            IMAGE_PATH="$i"
             shift
             ;;
         *)
@@ -36,27 +65,48 @@ if [ ! -d "$PATH" ]; then
     exit
 fi
 
-if [ -z $(docker images -q "$IMAGE") ] && [ "$IMAGE" == "$DEFAULT_IMAGE" ]; then
+if [ "$UNPRIVILEGED" = true ]; then
+    echo "--> Using unprivileged mode"
+
+    if [ ! -f "$IMAGE_PATH" ] || [ ! ${IMAGE_PATH: -7} == ".tar.gz" ]; then
+        echo "ERROR: Given path isn't to a .tar.gz file"
+
+        exit
+    else
+        echo "--> Unpacking tarball..."
+
+        ch-tar2dir "$IMAGE_PATH" /var/tmp
+        IMAGE_NAME=$(basename "$IMAGE_PATH" .tar.gz)
+    fi
+elif [ -z $(docker images -q "$IMAGE_NAME") ] && [ "$IMAGE_PATH" == "$DEFAULT_IMAGE" ]; then
     echo "--> Image not found, pulling from repository..."
-    docker pull "$IMAGE"
-elif [ -z $(docker images -q "$IMAGE") ]; then
-    echo "--> Image not found, be sure that your image exists..."
+    docker pull "$IMAGE_PATH"
+
+elif [ -z $(docker images -q "$IMAGE_PATH") ]; then
+    echo "ERROR: Image not found, be sure that your image exists..."
 
     exit
 fi
 
-docker run -dit \
-       --name=trace_analysis \
-       --mount type=bind,source=$PATH,target=/scratch \
-       $IMAGE bash > /dev/null 2>&1
 
-docker exec \
-       --workdir / \
-       trace_analysis \
-       phase1-workflow.sh /scratch application
-# I actually don't know why there is an application parameter but since it asks
-# for something I might as well put something
+if [ "$UNPRIVILEGED" = true ]; then
+    ch-run /var/tmp/$IMAGE_NAME -- phase1-workflow.sh $PATH application
+    # Is this all of it?
 
-docker container stop trace_analysis > /dev/null 2>&1
+else
+    sudo docker run -dit \
+         --name=trace_analysis \
+         --mount type=bind,source=$PATH,target=/scratch \
+         $IMAGE_NAME bash > /dev/null 2>&1
 
-docker container rm trace_analysis > /dev/null 2>&1
+    sudo docker exec \
+         --workdir / \
+         trace_analysis \
+         phase1-workflow.sh /scratch application
+    # I actually don't know why there is an application parameter but since it asks
+    # for something I might as well put something
+
+    sudo docker container stop trace_analysis > /dev/null 2>&1
+
+    sudo docker container rm trace_analysis > /dev/null 2>&1
+fi
