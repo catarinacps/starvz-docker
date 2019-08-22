@@ -65,7 +65,7 @@ To install it you have three options:
 #+begin_src bash :tangle yes
 git clone --recursive https://github.com/hpc/charliecloud.git
 make
-make install PREFIX=/usr/local
+sudo make install PREFIX=/usr/local
 #+end_src
 
 - Install from your package manager
@@ -153,6 +153,6 @@ USAGE:
 
 You can contact me at:
 
-#+BEGIN_EXAMPLE
+#+begin_example
 hcpsilva@inf.ufrgs.br
-#+END_EXAMPLE
+#+end_example

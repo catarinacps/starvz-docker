@@ -4,7 +4,7 @@ DEFAULT_IMAGE="hcpsilva/starvz:latest"
 
 IMAGE_NAME="$DEFAULT_IMAGE"
 IMAGE_PATH=""
-DIR_PATH=`pwd`
+DIR_PATH=$(pwd)
 UNPRIVILEGED=false
 
 function usage()
@@ -104,8 +104,6 @@ else
          --workdir / \
          trace_analysis \
          phase1-workflow.sh /scratch application
-    # I actually don't know why there is an application parameter but since it
-    # asks for something I might as well put something
 
     sudo docker container stop trace_analysis > /dev/null 2>&1
 
