@@ -19,8 +19,11 @@ Docker image.
 You can obtain this image by doing the following command:
 
 #+begin_src bash :tangle yes
-docker pull hcpsilva/starvz
+sudo docker pull hcpsilva/starvz
 #+end_src
+
+Remember that Docker does have all sorts of issues involving privilege
+escalation and such, beware!
 
 If you haven't downloaded the image when you eventually run the script, the
 script itself will pull the image.
@@ -42,10 +45,18 @@ git clone https://github.com/hcpsilva/starvz-docker.git
 This script supports the use of unprivileged containers through /Charliecloud/,
 an HPC alternative to Docker. /Charliecloud/ in itself just runs containers of
 images in an unprivileged manner, avoiding the privilege escalation issues of
-Docker and thus making it viable in scenarios such as HPC clusters.
+Docker and thus making it viable in scenarios such as HPC clusters. While
+running in this mode you *won't* be asked to run as super-user.
 
 Here I'm hoping to give you a mini-introduction on how to use this method with
 my script.
+
+To enable /user mount namespaces/ I had to run the following command (such
+method allows user programs to use a safer container utilization):
+
+#+begin_src bash :tangle yes
+sudo sysctl kernel/unprivileged_userns_clone=1
+#+end_src
 
 To install it you have three options:
 
