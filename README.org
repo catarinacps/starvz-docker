@@ -31,7 +31,7 @@ script itself will pull the image.
 Alternatively, you can either:
 - build my image locally
 - pass other image as a parameter to the script, check more details in [[Usage]]
-- pass a tarball with an image as your parameter, check more details in
+- pass a tarball with an image as your parameter, check more details in [[Unprivileged mode]]
 
 And you can obtain this repository and it's scripts for running data
 analysis by doing:

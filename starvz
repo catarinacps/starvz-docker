@@ -50,11 +50,10 @@ for i in "$@"; do
             IMAGE_PATH="$1"
             shift
             ;;
-        *)
-            DIR_PATH="$i"
-            ;;
     esac
 done
+
+DIR_PATH="$1"
 
 if [ ! -d "$DIR_PATH" ]; then
     echo "Given parameter is not a directory."
