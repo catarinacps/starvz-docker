@@ -10,6 +10,7 @@ Docker image.
 
 ** Table of contents                                                 :TOC_3:
   - [[#installation][Installation]]
+    - [[#unprivileged-mode][Unprivileged mode]]
   - [[#usage][Usage]]
   - [[#contact][Contact]]
 
@@ -27,6 +28,7 @@ script itself will pull the image.
 Alternatively, you can either:
 - build my image locally
 - pass other image as a parameter to the script, check more details in [[Usage]]
+- pass a tarball with an image as your parameter, check more details in
 
 And you can obtain this repository and it's scripts for running data
 analysis by doing:
@@ -34,6 +36,67 @@ analysis by doing:
 #+begin_src bash :tangle yes
 git clone https://github.com/hcpsilva/starvz-docker.git
 #+end_src
+
+*** Unprivileged mode
+
+This script supports the use of unprivileged containers through /Charliecloud/,
+an HPC alternative to Docker. /Charliecloud/ in itself just runs containers of
+images in an unprivileged manner, avoiding the privilege escalation issues of
+Docker and thus making it viable in scenarios such as HPC clusters.
+
+Here I'm hoping to give you a mini-introduction on how to use this method with
+my script.
+
+To install it you have three options:
+
+- Install from source
+
+#+begin_src bash :tangle yes
+git clone --recursive https://github.com/hpc/charliecloud.git
+make
+make install PREFIX=/usr/local
+#+end_src
+
+- Install from your package manager
+
+The following have the package available:
+
+#+begin_example
+Debian
+Gentoo
+openSUSE
+RPM-based
+Nix
+#+end_example
+
+- Install with =spack=
+
+=spack= is also a piece of software intended to be used in HPC
+environments. It's a package-manager that doesn't need permissions to install
+packages and features loads of stuff commonly used in scientific computation. I
+encourage you to read about it in [[https://spack.io/]].
+
+Given you have it in your path, just use the following command:
+
+#+begin_src bash :tangle yes
+spack install charliecloud
+#+end_src
+
+So, after installing Charliecloud you can convert your already existing Docker
+images to tarballs with the following command:
+
+#+begin_src bash :tangle yes
+image_name=hcpsilva/starvz
+target_directory=.
+
+ch-builder2tar $image_name $target_directory
+#+end_src
+
+After that you can distribute the flattened image to your target nodes or
+elsewhere.
+
+My script does have an option to send an arbitrary image tarball instead of the
+default, so all you have to do is pull my image and flatten it.
 
 ** Usage
 
@@ -48,18 +111,32 @@ Having that said, you can run some data analysis by using the script called
 =starvz=, which is in the root of this repository.
 
 #+begin_src bash :tangle yes
-./starvz [--image=your_image:tag] <full_path_to_the_traces>
+./starvz [options] <full_path_to_the_traces>
 #+end_src
 
 By running this command you'll launch the first phase of =starvz='s analysis.
 
-The script presumes some default values if you haven't set the parameter:
+The possible options are as follows:
 
-- Image to be used :: If you don't explicitly set other, the script will use the
-     image that I provide in my DockerHub repository.
-- Path to the directory :: Again, if you don't set it (you should, it's a
-     positional parameter), the script will fetch the current directory's path
-     through =pwd=.
+#+begin_src bash :results output :exports results
+./starvz -h
+#+end_src
+
+#+RESULTS:
+#+begin_example
+USAGE:
+
+./starvz [OPTIONS] <DIRECTORY>
+  where <DIRECTORY> is the *full* path to the directory containing the fxt traces
+
+  where [OPTIONS] can be any of the following, in no particular order:
+    -h | --help
+      shows this message and exits
+    -i | --image=image_name:tag
+      use a remote image instead of the default
+    -t | --tarball=path/to/the/image.tar.gz
+      use an image tarball instead of the default
+#+end_example
 
 ** Contact
 

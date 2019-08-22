@@ -10,21 +10,21 @@ UNPRIVILEGED=false
 function usage()
 {
     echo "$0 [OPTIONS] <DIRECTORY>"
-    echo "    where <DIRECTORY> is the *full path* to the directory containing the fxt traces"
-    echo " ---"
-    echo "[OPTIONS] can be any of the following, in no particular order:"
-    echo "  -h | --help"
-    echo "    shows this message and exits"
-    echo "  -i | --image=image_name:tag"
-    echo "    use a remote image instead of the default $default_image"
-    echo "  -t | --tarball=path/to/the/image.tar.gz"
-    echo "    use an image tarball instead of the default $default_image"
+    echo "  where <DIRECTORY> is the *full* path to the directory containing the fxt traces"
+    echo
+    echo "  where [OPTIONS] can be any of the following, in no particular order:"
+    echo "    -h | --help"
+    echo "      shows this message and exits"
+    echo "    -i | --image=image_name:tag"
+    echo "      use a remote image instead of the default $default_image"
+    echo "    -t | --tarball=path/to/the/image.tar.gz"
+    echo "      use an image tarball instead of the default $default_image"
 }
 
 for i in "$@"; do
     case $i in
         -h|--help)
-            echo "Usage:"
+            echo "USAGE:"
             echo
             usage
 
@@ -91,8 +91,8 @@ fi
 
 if [ "$UNPRIVILEGED" = true ]; then
     ch-run /var/tmp/$IMAGE_NAME -- phase1-workflow.sh $PATH application
-    # Is this all of it?
 
+    rm -rf /var/tmp/$IMAGE_NAME
 else
     sudo docker run -dit \
          --name=trace_analysis \
@@ -103,8 +103,8 @@ else
          --workdir / \
          trace_analysis \
          phase1-workflow.sh /scratch application
-    # I actually don't know why there is an application parameter but since it asks
-    # for something I might as well put something
+    # I actually don't know why there is an application parameter but since it
+    # asks for something I might as well put something
 
     sudo docker container stop trace_analysis > /dev/null 2>&1
 
