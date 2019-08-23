@@ -10,6 +10,7 @@ Docker image.
 
 ** Table of contents                                                 :TOC_3:
   - [[#installation][Installation]]
+    - [[#building-the-image][Building the image]]
     - [[#unprivileged-mode][Unprivileged mode]]
   - [[#usage][Usage]]
   - [[#contact][Contact]]
@@ -29,15 +30,36 @@ If you haven't downloaded the image when you eventually run the script, the
 script itself will pull the image.
 
 Alternatively, you can either:
-- build my image locally
-- pass other image as a parameter to the script, check more details in [[Usage]]
-- pass a tarball with an image as your parameter, check more details in [[Unprivileged mode]]
+- build my image locally, check more in [[#building-the-image][Building the image]]
+- pass other image as a parameter to the script, check more details in [[#usage][Usage]]
+- pass a tarball with an image as your parameter, check more details in [[#unprivileged-mode][Unprivileged mode]]
 
 And you can obtain this repository and it's scripts for running data
 analysis by doing:
 
 #+begin_src bash :tangle yes
 git clone https://github.com/hcpsilva/starvz-docker.git
+#+end_src
+
+*** Building the image
+
+So, you can build my image either using Docker or using Charliecloud.
+
+- With Docker all you have to do is the following:
+
+#+begin_src bash :tangle yes
+cd starvz-docker/
+sudo docker build --squash . -t hcpsilva/starvz
+#+end_src
+
+You can drop the =--squash= option as it is a experimental option. I included it
+as it significantly reduces the final image size.
+
+- With Charliecloud you do the following:
+
+#+begin_src bash :tangle yes
+cd starvz-docker/
+ch-grow -s $target_dir -t hcpsilva/starvz .
 #+end_src
 
 *** Unprivileged mode
