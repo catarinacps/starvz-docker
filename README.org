@@ -159,16 +159,18 @@ The possible options are as follows:
 #+begin_example
 USAGE:
 
-./starvz [OPTIONS] <DIRECTORY>
-  where <DIRECTORY> is the *full* path to the directory containing the fxt traces
+COMMAND:
+  ./starvz [OPTIONS] <DIRECTORY>
 
-  where [OPTIONS] can be any of the following, in no particular order:
+  WHERE <DIRECTORY> is the *full* path to the directory containing the fxt traces
+
+  WHERE [OPTIONS] can be any of the following, in no particular order:
     -h | --help
       shows this message and exits
     -i | --image=image_name:tag
-      use a remote image instead of the default
+      use a remote image instead of the default hcpsilva/starvz:latest
     -t | --tarball=path/to/the/image.tar.gz
-      use an image tarball instead of the default
+      use an image tarball instead of the default hcpsilva/starvz:latest
 #+end_example
 
 ** Contact

@@ -9,16 +9,18 @@ UNPRIVILEGED=false
 
 function usage()
 {
-    echo "$0 [OPTIONS] <DIRECTORY>"
-    echo "  where <DIRECTORY> is the *full* path to the directory containing the fxt traces"
+    echo "COMMAND:"
+    echo "  $0 [OPTIONS] <DIRECTORY>"
     echo
-    echo "  where [OPTIONS] can be any of the following, in no particular order:"
+    echo "  WHERE <DIRECTORY> is the *full* path to the directory containing the fxt traces"
+    echo
+    echo "  WHERE [OPTIONS] can be any of the following, in no particular order:"
     echo "    -h | --help"
     echo "      shows this message and exits"
     echo "    -i | --image=image_name:tag"
-    echo "      use a remote image instead of the default $default_image"
+    echo "      use a remote image instead of the default $DEFAULT_IMAGE"
     echo "    -t | --tarball=path/to/the/image.tar.gz"
-    echo "      use an image tarball instead of the default $default_image"
+    echo "      use an image tarball instead of the default $DEFAULT_IMAGE"
 }
 
 for i in "$@"; do
