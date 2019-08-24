@@ -30,12 +30,3 @@ RUN apt -y remove \
     procps libtool libtool-bin git python gawk curl build-essential \
     && apt -y autoremove \
     && apt clean
-
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod 755 /entrypoint.sh
-
-RUN useradd -s /bin/bash --create-home user
-USER user
-WORKDIR /home/user
-
-ENTRYPOINT ["/entrypoint.sh"]
