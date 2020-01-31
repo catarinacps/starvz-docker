@@ -30,7 +30,7 @@ for i in "$@"; do
             exit
             ;;
         --image=*)
-            IMAGE_NAME="${i#*=}"
+            IMAGE_NAME=${i#*=}
             shift
             ;;
         -i)
@@ -39,12 +39,12 @@ for i in "$@"; do
             shift
             ;;
         --tarball=*)
-            UNPRIVILEGED=true
-            IMAGE_PATH="${i#*=}"
+            UNPRIVILEGED='true'
+            IMAGE_PATH=${i#*=}
             shift
             ;;
         -t)
-            UNPRIVILEGED=true
+            UNPRIVILEGED='true'
             shift
             IMAGE_PATH="$1"
             shift
@@ -74,30 +74,30 @@ if [ "$UNPRIVILEGED" = true ]; then
         ch-tar2dir "$IMAGE_PATH" /var/tmp
         IMAGE_NAME=$(basename "$IMAGE_PATH" .tar.gz)
     fi
-elif [ -z $(sudo docker images -q "$IMAGE_NAME") ] && [ "$IMAGE_PATH" == "$DEFAULT_IMAGE" ]; then
+elif [ -z $(sudo docker images -q "$IMAGE_NAME") ] && [ "$IMAGE_PATH" = "$DEFAULT_IMAGE" ]; then
     echo "--> Image not found, pulling from repository..."
-    sudo docker pull "$IMAGE_PATH"
+    sudo docker pull "$IMAGE_NAME"
 
 elif [ -z $(sudo docker images -q "$IMAGE_NAME") ]; then
-    echo "ERROR: Image not found, be sure that your image exists..."
+    echo "ERROR: Image not found, be sure that your image exists..." 1>&2
 
     exit
 fi
 
 
-if [ "$UNPRIVILEGED" = true ]; then
+if [ "$UNPRIVILEGED" = 'true' ]; then
     echo "--> Using unprivileged mode..."
 
-    ch-run /var/tmp/$IMAGE_NAME -- phase1-workflow.sh $DIR_PATH application
+    ch-run "/var/tmp/$IMAGE_NAME" -- phase1-workflow.sh "$DIR_PATH" application
 
-    rm -rf /var/tmp/$IMAGE_NAME
+    rm -rf "/var/tmp/$IMAGE_NAME"
 else
     echo "--> Using privileged mode..."
 
     sudo docker run -dit \
          --name=trace_analysis \
-         --mount type=bind,source=$DIR_PATH,target=/scratch \
-         $IMAGE_NAME bash > /dev/null 2>&1
+         --mount type=bind,source="$DIR_PATH",target=/scratch \
+         "$IMAGE_NAME" bash > /dev/null 2>&1
 
     sudo docker exec \
          --workdir / \
