@@ -1,26 +1,23 @@
-#!/bin/bash
+#!/bin/sh
 
-DEFAULT_IMAGE="hcpsilva/starvz:latest"
+# robust script
+set -euo pipefail
 
-IMAGE_NAME="$DEFAULT_IMAGE"
-IMAGE_PATH=""
-DIR_PATH=$(pwd)
-UNPRIVILEGED=false
+usage() {
+cat <<EOF
+COMMAND:
+  $0 [OPTIONS] <DIRECTORY>                                                       
 
-function usage()
-{
-    echo "COMMAND:"
-    echo "  $0 [OPTIONS] <DIRECTORY>"
-    echo
-    echo "  WHERE <DIRECTORY> is the *full* path to the directory containing the fxt traces"
-    echo
-    echo "  WHERE [OPTIONS] can be any of the following, in no particular order:"
-    echo "    -h | --help"
-    echo "      shows this message and exits"
-    echo "    -i | --image=image_name:tag"
-    echo "      use a remote image instead of the default $DEFAULT_IMAGE"
-    echo "    -t | --tarball=path/to/the/image.tar.gz"
-    echo "      use an image tarball instead of the default $DEFAULT_IMAGE"
+  WHERE <DIRECTORY> is the path to the directory containing the fxt traces  
+
+  WHERE [OPTIONS] can be any of the following, in no particular order:             
+    -h | --help                                                                   
+      shows this message and exits                                                 
+    -i | --image=image_name:tag                                                    
+      use a remote image instead of the default $DEFAULT_IMAGE                     
+    -t | --tarball=path/to/the/image.tar.gz                                        
+      use an image tarball instead of the default $DEFAULT_IMAGE                   
+EOF
 }
 
 for i in "$@"; do
