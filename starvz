@@ -52,10 +52,14 @@ for i in "$@"; do
     esac
 done
 
-DIR_PATH="$1"
+IMAGE_NAME=${IMAGE_NAME:-hcpsilva/starvz:latest}
+
+UNPRIVILEGED=${UNPRIVILEGED:-false}
+
+DIR_PATH=$(readlink -f ${1:-$PWD})
 
 if [ ! -d "$DIR_PATH" ]; then
-    echo "Given parameter is not a directory."
+    echo "ERROR: Given parameter is not a directory." 1>&2
     echo "Please refer to the following usage example:"
     echo
     usage
@@ -63,9 +67,9 @@ if [ ! -d "$DIR_PATH" ]; then
     exit
 fi
 
-if [ "$UNPRIVILEGED" = true ]; then
-    if [ ! -f "$IMAGE_PATH" ] || [ ! ${IMAGE_PATH: -7} == ".tar.gz" ]; then
-        echo "ERROR: Given path isn't to a .tar.gz file"
+if [ "$UNPRIVILEGED" = 'true' ]; then
+    if [ ! -f "$IMAGE_PATH" ] || [ ! ${IMAGE_PATH#*.} = "tar.gz" ]; then
+        echo "ERROR: Given path isn't to a .tar.gz file" 1>&2
 
         exit
     else
